@@ -185,6 +185,26 @@ int main (int argc, char *argv[])
 
     case 9:
       //SYS
+      switch(M)
+      {
+        case 1:
+          PC = PC + 3;
+          printf("Output result is: %d\n", PC);
+          break;
+
+        case 2:
+          int input;
+          printf("Please Enter an Integer: ");
+          scanf("%d", &input);
+          printf("%d\n", input);
+          SP = SP - 1;
+          pas[SP] = input;
+        break;
+
+        case 3:
+          return 0;
+        break;
+      }  
       break;
 
     default:
