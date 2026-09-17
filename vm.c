@@ -109,33 +109,76 @@ int main (int argc, char *argv[])
 
         case(1):
         //push a + b;
+          SP = SP - 1;
+          pas[SP] = a + b;
         break;
 
         case(2):
+        //push a - b
+          SP = SP - 1;
+          pas[SP] = a - b;
         break;
 
         case(3):
+        //push a x b
+          SP = SP - 1;
+          pas[SP] = a * b;
         break;
 
         case(4):
+        //push a / b
+          if(b == 0) printf("Error: division by zero\n"), break;
+          
+          SP = SP - 1;
+          pas[SP] = a / b;
         break;
 
         case(5):
+        //push 1 if a = b, otherwise 0
+          SP = SP - 1;
+          if(a == b) pas[SP] = 1, break;
+
+          pas[SP] = 0;
         break;
 
         case(6):
+        //push 1 if a != b, otherwise 0
+          SP = SP - 1;
+          if(a != b) pas[SP] = 1, break;
+
+          pas[SP] = 0;
         break;
 
         case(7):
+        //push 1 if a < b, otherwise 0
+          SP = SP - 1;
+          if(a < b) pas[SP] = 1, break;
+
+          pas[SP] = 0;
         break;
 
         case(8):
+        //push 1 if a <= b, otherwise 0
+          SP = SP - 1;
+          if(a <= b) pas[SP] = 1, break;
+
+          pas[SP] = 0;
         break
 
-        case(9):
+        case(9)
+        //push 1 if a > b, otherwise 0
+          SP = SP - 1;
+          if(a > b) pas[SP] = 1, break;
+
+          pas[SP] = 0;
         break;
 
         case(10):
+        //push 1 if a >= b, otherwise 0
+          SP = SP - 1;
+          if(a >= b) pas[SP] = 1, break;
+
+          pas[SP] = 0;
         break;
 
       }
