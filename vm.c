@@ -44,9 +44,9 @@ int[1000] PAS;
 int PC = 200;
 int BP = 999;
 int SP = 1000;
-int OP = PAS[PC];
-int L = PAS[PC+1];
-int M = PAS[PC+2];
+int OP = pas[PC];
+int L = pas[PC+1];
+int M = pas[PC+2];
 int index = 0;
 
 int base(int bp, int L)
@@ -97,11 +97,13 @@ int main (int argc, char *argv[])
       break;
 
     case 2:
-      //SUB operations.
+      //SUB operations:
+      //Advance the pc to the next instruction
+      PC = PC + 3;
       switch(M)
       {
         case(0):
-          //return from procedure resture callers record
+          //return from procedure restore callers record
           SP = BP + 1;
           BP = pas[SP -2];
           PC = pas[SP -3];
@@ -110,6 +112,7 @@ int main (int argc, char *argv[])
         case(1):
         //push a + b;
           SP = SP - 1;
+          //where are a and b declared? are we given a and b? or do we find them using sp?
           pas[SP] = a + b;
         break;
 
@@ -188,7 +191,7 @@ int main (int argc, char *argv[])
       //LOD
       PC = PC + 3;
       sp = SP - 1;
-      pas[SP] = pas[base(BP, L) - M]
+      pas[SP] = pas[base(BP, L) - M];
       break;
 
     case 4:
@@ -211,7 +214,7 @@ int main (int argc, char *argv[])
     case 6:
       //INC
       PC = PC + 3;
-      SP = SP - M;
+      SP = SP - M; 
       break;
 
     case 7:
@@ -233,15 +236,17 @@ int main (int argc, char *argv[])
         case 1:
           PC = PC + 3;
           printf("Output result is: %d\n", PC);
+          //PC is the index for our PAS array; shouldn't it be SP? to get the value at the top of the stack?
+          //Also it says pop so shouldnt we change the SP after getting the value? SP = SP + 1;
           break;
 
         case 2:
-          int input;
+          int x;
           printf("Please Enter an Integer: ");
-          scanf("%d", &input);
-          printf("%d\n", input);
+          scanf("%d", &x);
+          printf("%d\n", x);
           SP = SP - 1;
-          pas[SP] = input;
+          pas[SP] = x;
         break;
 
         case 3:
