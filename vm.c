@@ -47,7 +47,7 @@ int SP = 1000;
 int OP = pas[PC];
 int L = pas[PC+1];
 int M = pas[PC+2];
-int index = 0;
+int index = PC;
 
 int base(int bp, int L)
 {
@@ -64,24 +64,22 @@ int main (int argc, char *argv[])
 {
   if (argc < 2)
   {
+    perror("Imporper number of arguments")
     return 1;
   }
+
   FILE *inputFile = fopen(argv[1], "r");
 
-  if(inputFile == NULL)
+  if(!inputFile)
   {
+    perror("File not Found");
     return 1;
   }
 
   int input;
-  while(input = fgetc(inputFile) != EOF)
+  while(input = fscanf(inputFIle, "%d", &pas[index])
   {
-    // This is a placeholder. We must trim spaces and \n from the array.
-    if(input != "\n" && input != " ")
-    {
-      PAS[index] = input;
-      index++;
-    }
+    index++;
   }
   fclose(inputFile);
 
@@ -203,11 +201,11 @@ int main (int argc, char *argv[])
 
     case 5:
       //CAL
-      pas[SP-1] = base(BP, L); //new position = ?
-      pas[SP-2] = BP; // new new postion = current base pointer;
-      pas[SP-3] = PC; // new new new position = PC;
+      pas[SP-1] = base(BP, L); //new position = static link?
+      pas[SP-2] = BP; // new new postion = current base pointer (dynamic link?)
+      pas[SP-3] = PC; // new new new position = PC (return address?)
       BP = SP - 1; // current base pointer = current stack pointer - 1;
-      PC = M;
+      PC = M; //where exactly does this go? we know advance must come before excecution.
       break;
 
     case 6:
@@ -217,9 +215,9 @@ int main (int argc, char *argv[])
       break;
 
     case 7:
-      //JMP
+      //JMP; We know jump requires setting the PC again.
       PC = M;
-      break;
+      break; // return address a
 
     case 8:
       // We need an if else statement here, PC changes if condition met otherwise it increments as usual.
