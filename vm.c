@@ -40,7 +40,7 @@ Due Date: See 9/18/26
 #include <stdlib.h>
 
 //Part 0: Initial declarations and reading from the input file.
-int[1000] PAS;
+int[1000] pas;
 int PC = 200;
 int BP = 999;
 int SP = 1000;
@@ -190,7 +190,7 @@ int main (int argc, char *argv[])
     case 3:
       //LOD
       PC = PC + 3;
-      sp = SP - 1;
+      SP = SP - 1;
       pas[SP] = pas[base(BP, L) - M];
       break;
 
@@ -203,18 +203,17 @@ int main (int argc, char *argv[])
 
     case 5:
       //CAL
-      //PC = PC + 3; is this needed?
-      pas[SP-1] = base(BP, L);
-      pas[SP -2] = BP;
-      pas[SP-3] = PC;
-      BP = SP - 1;
+      pas[SP-1] = base(BP, L); //new position = ?
+      pas[SP-2] = BP; // new new postion = current base pointer;
+      pas[SP-3] = PC; // new new new position = PC;
+      BP = SP - 1; // current base pointer = current stack pointer - 1;
       PC = M;
       break;
 
     case 6:
       //INC
       PC = PC + 3;
-      SP = SP - M; 
+      SP = SP - M; // Words are allocated here, we dont know what the words are just how many there are so we allocate m spaces.
       break;
 
     case 7:
@@ -223,9 +222,15 @@ int main (int argc, char *argv[])
       break;
 
     case 8:
-      //JPC
-      PC = PC + 3;
-      if(pas[SP] == 0) PC = M;
+      // We need an if else statement here, PC changes if condition met otherwise it increments as usual.
+      if(pas[SP] == 0)
+        {
+        PC = M;
+        }
+      else
+      {
+        PC = PC + 3;
+      }
       SP = SP + 1;
       break;
 
