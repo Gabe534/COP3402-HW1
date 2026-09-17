@@ -2,7 +2,7 @@
 Assignment:
 vm - HW1 PM/0 virtual machine
 
-Author: Gabriel Ross
+Authors: Gabriel Ross & Christoph Watson
 
 Language: C only
 
@@ -33,6 +33,161 @@ Class: COP 3402 - Systems Software
 
 Instructor: Jie Lin, Ph.D.
 
-Due Date: See Webcourses
+Due Date: See 9/18/26
 */
+
+#include <stdio.h>
+#include <stdlib.h>
+
+//Part 0: Initial declarations and reading from the input file.
+int[1000] PAS;
+int PC = 200;
+int BP = 999;
+int SP = 1000;
+int OP = PAS[PC];
+int L = PAS[PC+1];
+int M = PAS[PC+2];
+int index = 0;
+
+int base(int bp, int L)
+{
+  int arb = bp;
+  while (L > 0)
+  {
+    arb = pas[arb];
+    L--;
+  }
+  return arb;
+}
+
+int main (int argc, char *argv[])
+{
+  if (argc < 2)
+  {
+    return 1;
+  }
+  FILE *inputFile = fopen(argv[1], "r");
+
+  if(inputFile == NULL)
+  {
+    return 1;
+  }
+
+  int input;
+  while(input = fgetc(inputFile) != EOF)
+  {
+    // This is a placeholder. We must trim spaces and \n from the array.
+    if(input != "\n" && input != " ")
+    {
+      PAS[index] = input;
+      index++;
+    }
+  }
+  fclose(inputFile);
+
+  //Part 1: Use 1D array to build vm. Start with the instruction or OP CODE;
+
+  switch(OP)
+  {
+    case 1:
+      //LIT
+      PC = PC + 3;
+      SP = SP - 1;
+      pas[SP] = M;
+      break;
+
+    case 2:
+      //SUB operations.
+      switch(M)
+      {
+        case(0):
+          //return from procedure resture callers record
+          SP = BP + 1;
+          BP = pas[SP -2];
+          PC = pas[SP -3];
+        break;
+
+        case(1):
+        //push a + b;
+        break;
+
+        case(2):
+        break;
+
+        case(3):
+        break;
+
+        case(4):
+        break;
+
+        case(5):
+        break;
+
+        case(6):
+        break;
+
+        case(7):
+        break;
+
+        case(8):
+        break
+
+        case(9):
+        break;
+
+        case(10):
+        break;
+
+      }
+      break;
+
+    case 3:
+      //LOD
+      PC = PC + 3;
+      sp = SP - 1;
+      pas[SP] = pas[base(BP, L) - M]
+      break;
+
+    case 4:
+      //STO
+      PC = PC + 3;
+      pas[base(BP, L) - M] = pas[SP];
+      SP = SP + 1;
+      break;
+
+    case 5:
+      //CAL
+      //PC = PC + 3; is this needed?
+      pas[SP-1] = base(BP, L);
+      pas[SP -2] = BP;
+      pas[SP-3] = PC;
+      BP = SP - 1;
+      PC = M;
+      break;
+
+    case 6:
+      //INC
+      PC = PC + 3;
+      SP = SP - M;
+      break;
+
+    case 7:
+      //JMP
+      PC = M;
+      break;
+
+    case 8:
+      //JPC
+      PC = PC + 3;
+      if(pas[SP] == 0) PC = M;
+      SP = SP + 1;
+      break;
+
+    case 9:
+      //SYS
+      break;
+
+    default:
+  }
+}
 
