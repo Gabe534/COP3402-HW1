@@ -98,6 +98,8 @@ int main (int argc, char *argv[])
       //SUB operations:
       //Advance the pc to the next instruction
       PC = PC + 3;
+      a = SP;
+      b = SP + 1;
       switch(M)
       {
         case(0):
@@ -182,6 +184,10 @@ int main (int argc, char *argv[])
           pas[SP] = 0;
         break;
 
+        default:
+          printf("\nError: unknown OPR sub-operation\n);
+        break;
+
       }
       break;
 
@@ -238,7 +244,8 @@ int main (int argc, char *argv[])
       {
         case 1:
           PC = PC + 3;
-          printf("Output result is: %d\n", PC);
+          printf("Output result is: %d\n", SP);
+          SP = SP + 1;
           //PC is the index for our PAS array; shouldn't it be SP? to get the value at the top of the stack?
           //Also it says pop so shouldnt we change the SP after getting the value? SP = SP + 1;
           break;
@@ -255,10 +262,16 @@ int main (int argc, char *argv[])
         case 3:
           return 0;
         break;
+
+        default:
+          printf("\nError: unknown SYS operation\n")
+        break;
       }  
       break;
 
     default:
+      printf("\nError: unknown opcode\n");
+    break;
   }
 }
 
