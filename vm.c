@@ -237,7 +237,7 @@ int main (int argc, char *argv[])
           break;
   
           default:
-            printf("\nError: unknown OPR sub-operation\n);
+            printf("\nError: unknown OPR sub-operation\n");
           break;
   
         }
@@ -336,7 +336,7 @@ int main (int argc, char *argv[])
     }
 
     printf("%d\t%d\t%d\t", PC, BP, SP);
-    for(int i = SP, i < 1000, i++) 
+    for(int i = SP; i < 1000; i++) 
     {
       printf("%d\t", pas[i]);
     }
