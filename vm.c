@@ -39,16 +39,7 @@ Due Date: See 9/18/26
 #include <stdio.h>
 #include <stdlib.h>
 
-//Part 0: Initial declarations and reading from the input file.
 static int pas[1000];
-//int PC = 200;
-//int BP = 999;
-//int SP = 1000;
-//int OP = pas[PC];
-//int L = pas[PC+1];
-//int M = pas[PC+2];
-//int index = PC;
-//shouldn't we move these variables into main?
 
 int base(int bp, int L)
 {
@@ -71,6 +62,7 @@ int main (int argc, char *argv[])
   int L = pas[PC+1];
   int M = pas[PC+2];
   int index = PC;
+  int baseAddress; 
 
   if (argc < 2)
   {
@@ -103,7 +95,6 @@ int main (int argc, char *argv[])
   printf("\tL\tM\tPC\tBP\tSP\tstack\n");
   printf("Initial values: \t%d\t%d\t%d\n", PC, BP, SP);
 
-  //removing this from here because stack overflow must be checked aftereach operation that lowers SP
   while(1)
   {
     scanf("%d %d %d", &OP, &L, &M);
@@ -117,7 +108,7 @@ int main (int argc, char *argv[])
     L = pas[PC+1];
     M = pas[PC+2];
 
-    //couldn't we just put PC = PC + 3 here instead of incrementing inside of each executable, we could have done that but CAL and JMP dont advance by 3
+    //Switches cases by OP code:
     switch(OP)
     {
       case 1:
@@ -329,14 +320,28 @@ int main (int argc, char *argv[])
           perror("\nError: stack overflow\n");
           return;
         }
-        pas[SP] = pas[base(BP, L) - M];
+        //Ensure base(BP,L) - M produces a valid address. Not in system not in text segment. 
+        baseAddress = base(BP,L) - M;
+        if(baseAddress <= endInstruction)
+        {
+          perror("\n Error: data address out of rage\n");
+          return;
+        }
+        pas[SP] = pas[baseAddress];
         break;
   
       case 4:
         //STO
         printf("STO\t%d\t%d\t", L, M);
         PC = PC + 3;
-        pas[base(BP, L) - M] = pas[SP];
+
+        baseAddress = base(BP,L) - M;
+        if(baseAddress <= endInstruction)
+        {
+          perror("\n Error: data address out of rage\n");
+          return;
+        }
+        pas[baseAddress] = pas[SP];
         SP = SP + 1;
         break;
   
@@ -407,10 +412,10 @@ int main (int argc, char *argv[])
           break;
   
           case 3:
-            PC = PC + 3;
+            //PC = PC + 3; unneeded as this is the last instruction.
             printf("SYS\t%d\t%d\t", L, M);
             printf("%d\t%d\t%d\t", PC, BP, SP);
-            for(int i = 999; i >= SP; i--) 
+            for(int i = 999; i >= SP; i--)
             {
               printf("%d    ", pas[i]);
             }
@@ -429,7 +434,7 @@ int main (int argc, char *argv[])
     }
 
     printf("%d\t%d\t%d\t", PC, BP, SP);
-    for(int i = 999; i >= SP; i--) 
+    for(int i = 999; i >= SP; i--)
     {
       printf("%d    ", pas[i]);
     }
