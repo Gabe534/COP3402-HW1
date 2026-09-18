@@ -48,6 +48,7 @@ int OP = pas[PC];
 int L = pas[PC+1];
 int M = pas[PC+2];
 int index = PC;
+//shouldn't we move these variables into main?
 
 int base(int bp, int L)
 {
@@ -64,7 +65,7 @@ int main (int argc, char *argv[])
 {
   if (argc < 2)
   {
-    perror("Imporper number of arguments")
+    perror("Imporper number of arguments");
     return 1;
   }
 
@@ -77,7 +78,7 @@ int main (int argc, char *argv[])
   }
 
   int input;
-  while(input = fscanf(inputFIle, "%d", &pas[index])
+  while(input = fscanf(inputFile, "%d", &pas[index]))
   {
     index++;
   }
@@ -116,8 +117,8 @@ int main (int argc, char *argv[])
         //SUB operations:
         //Advance the pc to the next instruction
         PC = PC + 3;
-        a = SP;
-        b = SP + 1;
+        int a = SP;
+        int b = SP + 1;
         switch(M)
         {
           case(0):
@@ -153,7 +154,11 @@ int main (int argc, char *argv[])
           case(4):
           //push a / b
             printf("DIV\t%d\t%d\t", L, M);
-            if(b == 0) printf("Error: division by zero\n"), break;
+            if(b == 0) 
+            {
+              printf("Error: division by zero\n");
+              break;
+            }
             SP = SP - 1;
             pas[SP] = a / b;
           break;
@@ -162,8 +167,11 @@ int main (int argc, char *argv[])
           //push 1 if a = b, otherwise 0
             printf("EQL\t%d\t%d\t", L, M);
             SP = SP - 1;
-            if(a == b) pas[SP] = 1, break;
-  
+            if(a == b)
+            {
+              pas[SP] = 1;
+              break;
+            }
             pas[SP] = 0;
           break;
   
@@ -171,8 +179,11 @@ int main (int argc, char *argv[])
           //push 1 if a != b, otherwise 0
             printf("NEQ\t%d\t%d\t", L, M);
             SP = SP - 1;
-            if(a != b) pas[SP] = 1, break;
-  
+            if(a != b) 
+            {
+              pas[SP] = 1;
+              break;
+            }
             pas[SP] = 0;
           break;
   
@@ -180,8 +191,11 @@ int main (int argc, char *argv[])
           //push 1 if a < b, otherwise 0
             printf("LSS\t%d\t%d\t", L, M);
             SP = SP - 1;
-            if(a < b) pas[SP] = 1, break;
-  
+            if(a < b)
+            {
+              pas[SP] = 1;
+              break;
+            }
             pas[SP] = 0;
           break;
   
@@ -189,17 +203,24 @@ int main (int argc, char *argv[])
           //push 1 if a <= b, otherwise 0
             printf("LEQ\t%d\t%d\t", L, M);
             SP = SP - 1;
-            if(a <= b) pas[SP] = 1, break;
+            if(a <= b)
+            {
+              pas[SP] = 1;
+              break;
+            }
   
             pas[SP] = 0;
-          break
+          break;
   
-          case(9)
+          case(9):
           //push 1 if a > b, otherwise 0
             printf("GTR\t%d\t%d\t", L, M);
             SP = SP - 1;
-            if(a > b) pas[SP] = 1, break;
-  
+            if(a > b) 
+            {
+              pas[SP] = 1;
+              break;
+            }
             pas[SP] = 0;
           break;
   
@@ -207,8 +228,11 @@ int main (int argc, char *argv[])
           //push 1 if a >= b, otherwise 0
             printf("GEQ\t%d\t%d\t", L, M);
             SP = SP - 1;
-            if(a >= b) pas[SP] = 1, break;
-  
+            if(a >= b)
+            {
+              pas[SP] = 1;
+              break;
+            }
             pas[SP] = 0;
           break;
   
@@ -301,7 +325,7 @@ int main (int argc, char *argv[])
           break;
   
           default:
-            printf("\nError: unknown SYS operation\n")
+            printf("\nError: unknown SYS operation\n");
           break;
         }  
         break;
@@ -314,7 +338,7 @@ int main (int argc, char *argv[])
     printf("%d\t%d\t%d\t", PC, BP, SP);
     for(int i = SP, i < 1000, i++) 
     {
-      printf("%d\t, pas[i]);
+      printf("%d\t", pas[i]);
     }
     printf("\n");
   }    
