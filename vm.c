@@ -40,7 +40,7 @@ Due Date: See 9/18/26
 #include <stdlib.h>
 
 //Part 0: Initial declarations and reading from the input file.
-int[1000] pas;
+int pas[1000];
 int PC = 200;
 int BP = 999;
 int SP = 1000;
@@ -83,195 +83,226 @@ int main (int argc, char *argv[])
   }
   fclose(inputFile);
 
+  printf("\tL\tM\tPC\tBP\tSP\tstack\n");
+  printf("Initial values: \t%d\t%d\t%d\n", PC, BP, SP);
+
   //Part 1: Use 1D array to build vm. Start with the instruction or OP CODE;
-
-  switch(OP)
+  while(1) 
   {
-    case 1:
-      //LIT
-      PC = PC + 3;
-      SP = SP - 1;
-      pas[SP] = M;
-      break;
-
-    case 2:
-      //SUB operations:
-      //Advance the pc to the next instruction
-      PC = PC + 3;
-      a = SP;
-      b = SP + 1;
-      switch(M)
-      {
-        case(0):
-          //return from procedure restore callers record
-          SP = BP + 1;
-          BP = pas[SP -2];
-          PC = pas[SP -3];
-        break;
-
-        case(1):
-        //push a + b;
-          SP = SP - 1;
-          //where are a and b declared? are we given a and b? or do we find them using sp?
-          pas[SP] = a + b;
-        break;
-
-        case(2):
-        //push a - b
-          SP = SP - 1;
-          pas[SP] = a - b;
-        break;
-
-        case(3):
-        //push a x b
-          SP = SP - 1;
-          pas[SP] = a * b;
-        break;
-
-        case(4):
-        //push a / b
-          if(b == 0) printf("Error: division by zero\n"), break;
-          
-          SP = SP - 1;
-          pas[SP] = a / b;
-        break;
-
-        case(5):
-        //push 1 if a = b, otherwise 0
-          SP = SP - 1;
-          if(a == b) pas[SP] = 1, break;
-
-          pas[SP] = 0;
-        break;
-
-        case(6):
-        //push 1 if a != b, otherwise 0
-          SP = SP - 1;
-          if(a != b) pas[SP] = 1, break;
-
-          pas[SP] = 0;
-        break;
-
-        case(7):
-        //push 1 if a < b, otherwise 0
-          SP = SP - 1;
-          if(a < b) pas[SP] = 1, break;
-
-          pas[SP] = 0;
-        break;
-
-        case(8):
-        //push 1 if a <= b, otherwise 0
-          SP = SP - 1;
-          if(a <= b) pas[SP] = 1, break;
-
-          pas[SP] = 0;
-        break
-
-        case(9)
-        //push 1 if a > b, otherwise 0
-          SP = SP - 1;
-          if(a > b) pas[SP] = 1, break;
-
-          pas[SP] = 0;
-        break;
-
-        case(10):
-        //push 1 if a >= b, otherwise 0
-          SP = SP - 1;
-          if(a >= b) pas[SP] = 1, break;
-
-          pas[SP] = 0;
-        break;
-
-        default:
-          printf("\nError: unknown OPR sub-operation\n);
-        break;
-
-      }
-      break;
-
-    case 3:
-      //LOD
-      PC = PC + 3;
-      SP = SP - 1;
-      pas[SP] = pas[base(BP, L) - M];
-      break;
-
-    case 4:
-      //STO
-      PC = PC + 3;
-      pas[base(BP, L) - M] = pas[SP];
-      SP = SP + 1;
-      break;
-
-    case 5:
-      //CAL
-      pas[SP-1] = base(BP, L); //new position = static link?
-      pas[SP-2] = BP; // new new postion = current base pointer (dynamic link?)
-      pas[SP-3] = PC; // new new new position = PC (return address?)
-      BP = SP - 1; // current base pointer = current stack pointer - 1;
-      PC = M; //where exactly does this go? we know advance must come before excecution.
-      break;
-
-    case 6:
-      //INC
-      PC = PC + 3;
-      SP = SP - M; // Words are allocated here, we dont know what the words are just how many there are so we allocate m spaces.
-      break;
-
-    case 7:
-      //JMP; We know jump requires setting the PC again.
-      PC = M;
-      break; // return address a
-
-    case 8:
-      // We need an if else statement here, PC changes if condition met otherwise it increments as usual.
-      if(pas[SP] == 0)
-        {
-        PC = M;
-        }
-      else
-      {
+    switch(OP)
+    {
+      case 1:
+        //LIT
+        printf("LIT\t%d\t%d\t", L, M);
         PC = PC + 3;
-      }
-      SP = SP + 1;
-      break;
-
-    case 9:
-      //SYS
-      switch(M)
-      {
-        case 1:
-          PC = PC + 3;
-          printf("Output result is: %d\n", SP);
-          SP = SP + 1;
-          //PC is the index for our PAS array; shouldn't it be SP? to get the value at the top of the stack?
-          //Also it says pop so shouldnt we change the SP after getting the value? SP = SP + 1;
+        SP = SP - 1;
+        pas[SP] = M;
+        break;
+  
+      case 2:
+        //SUB operations:
+        //Advance the pc to the next instruction
+        PC = PC + 3;
+        a = SP;
+        b = SP + 1;
+        switch(M)
+        {
+          case(0):
+            //return from procedure restore callers record
+            printf("RTN\t%d\t%d\t", L, M);
+            SP = BP + 1;
+            BP = pas[SP -2];
+            PC = pas[SP -3];
           break;
-
-        case 2:
-          int x;
-          printf("Please Enter an Integer: ");
-          scanf("%d", &x);
-          printf("%d\n", x);
-          SP = SP - 1;
-          pas[SP] = x;
+  
+          case(1):
+          //push a + b;
+            printf("ADD\t%d\t%d\t", L, M);
+            SP = SP - 1;
+            //where are a and b declared? are we given a and b? or do we find them using sp?
+            pas[SP] = a + b;
+          break;
+  
+          case(2):
+          //push a - b
+            printf("SUB\t%d\t%d\t", L, M);
+            SP = SP - 1;
+            pas[SP] = a - b;
+          break;
+  
+          case(3):
+          //push a x b
+            printf("MUL\t%d\t%d\t", L, M);
+            SP = SP - 1;
+            pas[SP] = a * b;
+          break;
+  
+          case(4):
+          //push a / b
+            printf("DIV\t%d\t%d\t", L, M);
+            if(b == 0) printf("Error: division by zero\n"), break;
+            SP = SP - 1;
+            pas[SP] = a / b;
+          break;
+  
+          case(5):
+          //push 1 if a = b, otherwise 0
+            printf("EQL\t%d\t%d\t", L, M);
+            SP = SP - 1;
+            if(a == b) pas[SP] = 1, break;
+  
+            pas[SP] = 0;
+          break;
+  
+          case(6):
+          //push 1 if a != b, otherwise 0
+            printf("NEQ\t%d\t%d\t", L, M);
+            SP = SP - 1;
+            if(a != b) pas[SP] = 1, break;
+  
+            pas[SP] = 0;
+          break;
+  
+          case(7):
+          //push 1 if a < b, otherwise 0
+            printf("LSS\t%d\t%d\t", L, M);
+            SP = SP - 1;
+            if(a < b) pas[SP] = 1, break;
+  
+            pas[SP] = 0;
+          break;
+  
+          case(8):
+          //push 1 if a <= b, otherwise 0
+            printf("LEQ\t%d\t%d\t", L, M);
+            SP = SP - 1;
+            if(a <= b) pas[SP] = 1, break;
+  
+            pas[SP] = 0;
+          break
+  
+          case(9)
+          //push 1 if a > b, otherwise 0
+            printf("GTR\t%d\t%d\t", L, M);
+            SP = SP - 1;
+            if(a > b) pas[SP] = 1, break;
+  
+            pas[SP] = 0;
+          break;
+  
+          case(10):
+          //push 1 if a >= b, otherwise 0
+            printf("GEQ\t%d\t%d\t", L, M);
+            SP = SP - 1;
+            if(a >= b) pas[SP] = 1, break;
+  
+            pas[SP] = 0;
+          break;
+  
+          default:
+            printf("\nError: unknown OPR sub-operation\n);
+          break;
+  
+        }
         break;
-
-        case 3:
-          return 0;
+  
+      case 3:
+        //LOD
+        printf("LOD\t%d\t%d\t", L, M);
+        PC = PC + 3;
+        SP = SP - 1;
+        pas[SP] = pas[base(BP, L) - M];
         break;
-
-        default:
-          printf("\nError: unknown SYS operation\n")
+  
+      case 4:
+        //STO
+        printf("STO\t%d\t%d\t", L, M);
+        PC = PC + 3;
+        pas[base(BP, L) - M] = pas[SP];
+        SP = SP + 1;
         break;
-      }  
+  
+      case 5:
+        //CAL
+        printf("CAL\t%d\t%d\t", L, M);
+        pas[SP-1] = base(BP, L); //new position = static link?
+        pas[SP-2] = BP; // new new postion = current base pointer (dynamic link?)
+        pas[SP-3] = PC; // new new new position = PC (return address?)
+        BP = SP - 1; // current base pointer = current stack pointer - 1;
+        PC = M; //where exactly does this go? we know advance must come before excecution.
+        break;
+  
+      case 6:
+        //INC
+        printf("INC\t%d\t%d\t", L, M);
+        PC = PC + 3;
+        SP = SP - M; // Words are allocated here, we dont know what the words are just how many there are so we allocate m spaces.
+        break;
+  
+      case 7:
+        //JMP; We know jump requires setting the PC again.
+        printf("JMP\t%d\t%d\t", L, M);
+        PC = M;
+        break; // return address a
+  
+      case 8:
+        // We need an if else statement here, PC changes if condition met otherwise it increments as usual.
+        printf("JPC\t%d\t%d\t", L, M);
+        if(pas[SP] == 0)
+          {
+          PC = M;
+          }
+        else
+        {
+          PC = PC + 3;
+        }
+        SP = SP + 1;
+        break;
+  
+      case 9:
+        //SYS
+        switch(M)
+        {
+          case 1:
+            PC = PC + 3;
+            printf("Output result is: %d\n", SP);
+            printf("SYS\t%d\t%d\t", L, M);
+            SP = SP + 1;
+            //PC is the index for our PAS array; shouldn't it be SP? to get the value at the top of the stack?
+            //Also it says pop so shouldnt we change the SP after getting the value? SP = SP + 1;
+            break;
+  
+          case 2:
+            int x;
+            printf("Please Enter an Integer: ");
+            scanf("%d", &x);
+            printf("%d\n", x);
+            printf("SYS\t%d\t%d\t", L, M);
+            SP = SP - 1;
+            pas[SP] = x;
+          break;
+  
+          case 3:
+            return 0;
+          break;
+  
+          default:
+            printf("\nError: unknown SYS operation\n")
+          break;
+        }  
+        break;
+  
+      default:
+        printf("\nError: unknown opcode\n");
       break;
+    }
 
-    default:
-      printf("\nError: unknown opcode\n");
-    break;
-  }
+    printf("%d\t%d\t%d\t", PC, BP, SP);
+    for(int i = SP, i < 1000, i++) 
+    {
+      printf("%d\t, pas[i]);
+    }
+    printf("\n");
+  }    
 }
 
