@@ -89,6 +89,19 @@ int main (int argc, char *argv[])
   //Part 1: Use 1D array to build vm. Start with the instruction or OP CODE;
   while(1) 
   {
+    scanf("%d %d %d", &OP, &L, &M);
+    
+    if(PC < 200 || PC > 999) {
+      printf("\nError: program counter left the text segment\n");
+      return;
+    }
+    
+    OP = pas[PC];
+    L = pas[PC+1];
+    M = pas[PC+2];
+
+    //couldn't we just put PC = PC + 3 here instead of incrementing inside of each executable
+    
     switch(OP)
     {
       case 1:
@@ -274,6 +287,7 @@ int main (int argc, char *argv[])
   
           case 2:
             int x;
+            PC = PC + 3;
             printf("Please Enter an Integer: ");
             scanf("%d", &x);
             printf("%d\n", x);
@@ -283,7 +297,7 @@ int main (int argc, char *argv[])
           break;
   
           case 3:
-            return 0;
+            return;
           break;
   
           default:
