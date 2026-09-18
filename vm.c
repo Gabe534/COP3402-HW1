@@ -40,14 +40,14 @@ Due Date: See 9/18/26
 #include <stdlib.h>
 
 //Part 0: Initial declarations and reading from the input file.
-int pas[1000];
-int PC = 200;
-int BP = 999;
-int SP = 1000;
-int OP = pas[PC];
-int L = pas[PC+1];
-int M = pas[PC+2];
-int index = PC;
+static int pas[1000];
+//int PC = 200;
+//int BP = 999;
+//int SP = 1000;
+//int OP = pas[PC];
+//int L = pas[PC+1];
+//int M = pas[PC+2];
+//int index = PC;
 //shouldn't we move these variables into main?
 
 int base(int bp, int L)
@@ -63,6 +63,14 @@ int base(int bp, int L)
 
 int main (int argc, char *argv[])
 {
+  int PC = 200;
+  int BP = 999;
+  int SP = 1000;
+  int OP = pas[PC];
+  int L = pas[PC+1];
+  int M = pas[PC+2];
+  int index = PC;
+
   if (argc < 2)
   {
     perror("Imporper number of arguments");
@@ -78,7 +86,7 @@ int main (int argc, char *argv[])
   }
 
   int input;
-  while(input = fscanf(inputFile, "%d", &pas[index]))
+  while((input = fscanf(inputFile, "%d", &pas[index])) == 1)
   {
     index++;
   }
@@ -94,7 +102,7 @@ int main (int argc, char *argv[])
     
     if(PC < 200 || PC > 999) {
       printf("\nError: program counter left the text segment\n");
-      return;
+      return 0;
     }
     
     OP = pas[PC];
@@ -302,7 +310,7 @@ int main (int argc, char *argv[])
         {
           case 1:
             PC = PC + 3;
-            printf("Output result is: %d\n", SP);
+            printf("Output result is: %d\n", pas[SP]);
             printf("SYS\t%d\t%d\t", L, M);
             SP = SP + 1;
             //PC is the index for our PAS array; shouldn't it be SP? to get the value at the top of the stack?
@@ -321,7 +329,15 @@ int main (int argc, char *argv[])
           break;
   
           case 3:
-            return;
+            PC = PC + 3;
+            printf("SYS\t%d\t%d\t", L, M);
+            printf("%d\t%d\t%d\t", PC, BP, SP);
+            for(int i = 999; i >= SP; i--) 
+            {
+              printf("%d    ", pas[i]);
+            }
+            printf("\n");
+            return 0;
           break;
   
           default:
@@ -336,9 +352,9 @@ int main (int argc, char *argv[])
     }
 
     printf("%d\t%d\t%d\t", PC, BP, SP);
-    for(int i = SP; i < 1000; i++) 
+    for(int i = 999; i >= SP; i--) 
     {
-      printf("%d\t", pas[i]);
+      printf("%d    ", pas[i]);
     }
     printf("\n");
   }    
