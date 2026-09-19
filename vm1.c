@@ -62,11 +62,11 @@ int main (int argc, char *argv[])
   int L = pas[PC+1];
   int M = pas[PC+2];
   int index = PC;
-  int baseAddress; 
+  int baseAddress;
 
-  if (argc < 2)
+  if (argc != 2)
   {
-    perror("\nError: imporper number of arguments\n");
+  printf("\nUsage: ./vm <input file>\n");
     return 1;
   }
 
@@ -74,7 +74,7 @@ int main (int argc, char *argv[])
 
   if(!inputFile)
   {
-    perror("\nError: file not found\n");
+    printf("\nError: cannot open %s\n", argv[1]);
     return 1;
   }
 
@@ -84,7 +84,7 @@ int main (int argc, char *argv[])
     index++;
     if(index > 999)
     {
-      perror("\nError: program too large for text segment\n");
+      printf("\nError: program too large for text segment\n");
       return 1;
     }
     endInstruction = index - 1;
@@ -97,16 +97,17 @@ int main (int argc, char *argv[])
 
   while(1)
   {
-    scanf("%d %d %d", &OP, &L, &M);
+    //scanf("%d %d %d", &OP, &L, &M);
 
     if(PC < 200 || PC > 999) {
       printf("\nError: program counter left the text segment\n");
       return 0;
     }
-    //
+    /*
     OP = pas[PC];
     L = pas[PC+1];
     M = pas[PC+2];
+    */
 
     //Switches cases by OP code:
     switch(OP)
@@ -119,7 +120,7 @@ int main (int argc, char *argv[])
         //after SP is lowered we check if SP ever overrides text segment.
         if(SP == endInstruction)
         {
-          perror("\nError: stack overflow\n");
+          printf("\nError: stack overflow\n");
           return;
         }
         pas[SP] = M;
@@ -153,7 +154,7 @@ int main (int argc, char *argv[])
             SP = SP - 1;
             if(SP == endInstruction)
             {
-             perror("\nError: stack overflow\n");
+             printf("\nError: stack overflow\n");
              return;
             }
             pas[SP] = a + b;
@@ -165,7 +166,7 @@ int main (int argc, char *argv[])
             SP = SP - 1;
             if(SP == endInstruction)
             {
-              perror("\nError: stack overflow\n");
+              printf("\nError: stack overflow\n");
               return;
             }
           pas[SP] = a - b;
@@ -177,7 +178,7 @@ int main (int argc, char *argv[])
             SP = SP - 1;
             if(SP == endInstruction)
             {
-              perror("\nError: stack overflow\n");
+              printf("\nError: stack overflow\n");
             return;
             }
             pas[SP] = a * b;
@@ -194,7 +195,7 @@ int main (int argc, char *argv[])
             SP = SP - 1;
             if(SP == endInstruction)
             {
-              perror("\nError: stack overflow\n");
+              printf("\nError: stack overflow\n");
             return;
             }
             pas[SP] = a / b;
@@ -206,7 +207,7 @@ int main (int argc, char *argv[])
             SP = SP - 1;
             if(SP == endInstruction)
             {
-              perror("\nError: stack overflow\n");
+              printf("\nError: stack overflow\n");
             return;
             }
             if(a == b)
@@ -223,7 +224,7 @@ int main (int argc, char *argv[])
             SP = SP - 1;
             if(SP == endInstruction)
             {
-              perror("\nError: stack overflow\n");
+              printf("\nError: stack overflow\n");
             return;
             }
             if(a != b)
@@ -240,7 +241,7 @@ int main (int argc, char *argv[])
             SP = SP - 1;
             if(SP == endInstruction)
             {
-              perror("\nError: stack overflow\n");
+              printf("\nError: stack overflow\n");
             return;
             }
             if(a < b)
@@ -257,7 +258,7 @@ int main (int argc, char *argv[])
             SP = SP - 1;
             if(SP == endInstruction)
             {
-              perror("\nError: stack overflow\n");
+              printf("\nError: stack overflow\n");
             return;
             }
             if(a <= b)
@@ -275,7 +276,7 @@ int main (int argc, char *argv[])
             SP = SP - 1;
             if(SP == endInstruction)
             {
-              perror("\nError: stack overflow\n");
+              printf("\nError: stack overflow\n");
             return;
             }
             if(a > b)
@@ -292,7 +293,7 @@ int main (int argc, char *argv[])
             SP = SP - 1;
             if(SP == endInstruction)
             {
-              perror("\nError: stack overflow\n");
+              printf("\nError: stack overflow\n");
               return;
             }
             if(a >= b)
@@ -317,14 +318,14 @@ int main (int argc, char *argv[])
         SP = SP - 1;
         if(SP == endInstruction)
         {
-          perror("\nError: stack overflow\n");
+          printf("\nError: stack overflow\n");
           return;
         }
         //Ensure base(BP,L) - M produces a valid address. Not in system not in text segment. 
         baseAddress = base(BP,L) - M;
         if(baseAddress <= endInstruction)
         {
-          perror("\n Error: data address out of rage\n");
+          printf("\n Error: data address out of rage\n");
           return;
         }
         pas[SP] = pas[baseAddress];
@@ -338,7 +339,7 @@ int main (int argc, char *argv[])
         baseAddress = base(BP,L) - M;
         if(baseAddress <= endInstruction)
         {
-          perror("\n Error: data address out of rage\n");
+          printf("\n Error: data address out of rage\n");
           return;
         }
         pas[baseAddress] = pas[SP];
@@ -362,7 +363,7 @@ int main (int argc, char *argv[])
         SP = SP - M;// Words are allocated here, we dont know what the words are just how many there are so we allocate m spaces.
         if(SP == endInstruction)
         {
-          perror("\nError: stack overflow\n");
+          printf("\nError: stack overflow\n");
           return;
         }
         break;
