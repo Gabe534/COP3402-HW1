@@ -191,13 +191,10 @@ int main (int argc, char *argv[])
           case(4):
           //push a / b
             printf("DIV\t%d\t%d\t", L, M);
-
-            
-            if(a == 0 || b = 0)
+            if(a == 0)
             {
               printf("\nError: division by zero\n");
               return 1;
-              break;
             }
             SP = SP + 1;
             /*if(SP <= endInstruction)
@@ -364,14 +361,14 @@ int main (int argc, char *argv[])
   
       case 6:
         //INC
-        //printf("INC\t%d\t%d\t", L, M); //
+        //printf("INC\t%d\t%d\t", L, M);
         SP = SP - M;// Words are allocated here, we dont know what the words are just how many there are so we allocate m spaces.
         if(SP <= endInstruction)
         {
           printf("\nError: stack overflow\n");
           return 1;
         }
-        //printf("INC\t%d\t%d\t", L, M);//
+        printf("INC\t%d\t%d\t", L, M);
         break;
   
       case 7:
@@ -443,7 +440,7 @@ int main (int argc, char *argv[])
 
     for(int i = 999; i >= SP; i--)
     {
-      if(i == temp) 
+      if(i == temp)
       {
         printf("| ");
         temp = pas[temp];
@@ -452,5 +449,5 @@ int main (int argc, char *argv[])
       printf("%-5d", pas[i]);
     }
     printf("\n");
-  }  
+  }
 }
