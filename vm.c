@@ -52,19 +52,26 @@ int base(int bp, int L)
   return arb;
 }
 
+void printfunction(int L, int M, int PC, int BP, int stack){
+  printf("\tL\tM\tPC\tBP\tSP\tstack\n");
+  printf("Initial values: %d %d %d", PC, BP, SP);
+}
+
 //Part 0: Initial declarations and reading from the input file.
 int main (int argc, char *argv[])
 {
   int PC = 200;
   int BP = 999;
   int SP = 1000;
-  int OP;
-  int L;
-  int M;
+  int OP = pas[PC];
+  int L = pas[PC + 1];
+  int M = [PC +2];
   int index = PC;
-  int endInstruction;
-  int baseAddress;
-  int x;
+  int endInstruction = PC;
+  int baseAddress = 0;
+  int x = 0;
+  //number of bases.
+  int bases = 1;
 
   if (argc != 2)
   {
@@ -127,6 +134,7 @@ int main (int argc, char *argv[])
           return 1;
         }
         pas[SP] = M;
+        printf("\t%d\t%d\t\%d\t", PC, BP, SP);
         break;
   
       case 2:
@@ -359,6 +367,7 @@ int main (int argc, char *argv[])
         pas[SP-3] = PC; // new new new position = PC (return address?)
         BP = SP - 1; // current base pointer = current stack pointer - 1;
         PC = M;
+        bases++;
         break;
   
       case 6:
@@ -439,15 +448,20 @@ int main (int argc, char *argv[])
     printf("%d\t%d\t%d\t", PC, BP, SP);
 
     int temp = pas[BP];
-
+    /*
+     * Separate activation records in the stack display with a vertical bar (|) before the 
+     * base of each record other than the outermost.
+     * What variable telsl us the current activation record? BP
+     * Find the bases by following dynamic links from BP.
+     */
     for(int i = 999; i >= SP; i--)
     {
-      if(i == temp)
+      if(bases > 1)
       {
-        printf("| ");
-        temp = pas[temp];
+        for(int j = 1; j < bases; j++){
+          printf("| ");
+        }
       }
-
       printf("%-5d", pas[i]);
     }
     printf("\n");
