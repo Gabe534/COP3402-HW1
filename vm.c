@@ -191,9 +191,12 @@ int main (int argc, char *argv[])
           case(4):
           //push a / b
             printf("DIV\t%d\t%d\t", L, M);
-            if(b == 0)
+
+            
+            if(a == 0 || b = 0)
             {
               printf("\nError: division by zero\n");
+              return 1;
               break;
             }
             SP = SP + 1;
@@ -310,13 +313,14 @@ int main (int argc, char *argv[])
   
           default:
             printf("\nError: unknown OPR sub-operation\n");
+            return 1;
           break;
         }
         break;
   
       case 3:
         //LOD
-        printf("LOD\t%d\t%d\t", L, M);
+        // printf("LOD\t%d\t%d\t", L, M); //
         SP = SP - 1;
         if(SP <= endInstruction)
         {
@@ -327,22 +331,23 @@ int main (int argc, char *argv[])
         baseAddress = base(BP,L) - M;
         if(baseAddress <= endInstruction)
         {
-          printf("\n Error: data address out of rage\n");
+          printf("\nError: data address out of range\n");
           return 1;
         }
+        // printf("LOD\t%d\t%d\t", L, M); //
         pas[SP] = pas[baseAddress];
         break;
   
       case 4:
         //STO
-        printf("STO\t%d\t%d\t", L, M);
 
         baseAddress = base(BP,L) - M;
         if(baseAddress <= endInstruction)
         {
-          printf("\n Error: data address out of rage\n");
+          printf("\nError: data address out of range\n");
           return 1;
         }
+        // printf("STO\t%d\t%d\t", L, M);//
         pas[baseAddress] = pas[SP];
         SP = SP + 1;
         break;
@@ -359,13 +364,14 @@ int main (int argc, char *argv[])
   
       case 6:
         //INC
-        printf("INC\t%d\t%d\t", L, M);
+        //printf("INC\t%d\t%d\t", L, M); //
         SP = SP - M;// Words are allocated here, we dont know what the words are just how many there are so we allocate m spaces.
         if(SP <= endInstruction)
         {
           printf("\nError: stack overflow\n");
           return 1;
         }
+        //printf("INC\t%d\t%d\t", L, M);//
         break;
   
       case 7:
@@ -403,6 +409,7 @@ int main (int argc, char *argv[])
             if(SP <= endInstruction)
             {
               printf("\nError: stack overflow\n");
+              return 1;
             }
             pas[SP] = x;
           break;
@@ -420,20 +427,30 @@ int main (int argc, char *argv[])
 
           default:
             printf("\nError: unknown SYS operation\n");
+            return 1;
           break;
         }
         break;
       default:
         printf("\nError: unknown opcode\n");
+        return 1;
       break;
     }
 
     printf("%d\t%d\t%d\t", PC, BP, SP);
+
+    int temp = pas[BP];
+
     for(int i = 999; i >= SP; i--)
     {
-      printf("%d    ", pas[i]);
+      if(i == temp) 
+      {
+        printf("| ");
+        temp = pas[temp];
+      }
+
+      printf("%-5d", pas[i]);
     }
     printf("\n");
-  }
+  }  
 }
-
