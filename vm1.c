@@ -427,12 +427,16 @@ int main (int argc, char *argv[])
       break;
     }
 
-    printf("%d\t%d\t%d\t", PC, BP, SP);
+    printf("%d\t%d\t%d", PC, BP, SP);
+
+    int temp = BP;
+
     for(int i = 999; i >= SP; i--)
     {
-      if(i == BP) 
+      if(i == temp && pas[temp] != 0) 
       {
-        printf("| ");
+        printf("%5s", "| ");
+        temp = pas[temp+1];
       }
 
       printf("%-5d", pas[i]);
