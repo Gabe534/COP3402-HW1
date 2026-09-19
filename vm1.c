@@ -58,11 +58,13 @@ int main (int argc, char *argv[])
   int PC = 200;
   int BP = 999;
   int SP = 1000;
-  int OP = pas[PC];
-  int L = pas[PC+1];
-  int M = pas[PC+2];
+  int OP;
+  int L;
+  int M;
   int index = PC;
+  int endInstruction;
   int baseAddress;
+  int x;
 
   if (argc != 2)
   {
@@ -84,11 +86,12 @@ int main (int argc, char *argv[])
     index++;
     if(index > 999)
     {
-      printf("\nError: program too large for text segment\n");
+      printf("\nError: program too large for the text segment\n");
       return 1;
     }
-    endInstruction = index - 1;
   }
+  endInstruction = index - 1;
+
   fclose(inputFile);
 
   //print initial values of the stackspace.
@@ -99,15 +102,16 @@ int main (int argc, char *argv[])
   {
     //scanf("%d %d %d", &OP, &L, &M);
 
-    if(PC < 200 || PC > 999) {
+    //check if PC is in the range from 200 to the last instruction
+    if(PC < 200 || PC + 2 > endInstruction) {
       printf("\nError: program counter left the text segment\n");
-      return 0;
+      return 1;
     }
-    /*
+
     OP = pas[PC];
     L = pas[PC+1];
     M = pas[PC+2];
-    */
+    PC = PC + 3; // advance PC
 
     //Switches cases by OP code:
     switch(OP)
@@ -115,13 +119,12 @@ int main (int argc, char *argv[])
       case 1:
         //LIT
         printf("LIT\t%d\t%d\t", L, M);
-        PC = PC + 3;
         SP = SP - 1;
         //after SP is lowered we check if SP ever overrides text segment.
-        if(SP == endInstruction)
+        if(SP <= endInstruction)
         {
           printf("\nError: stack overflow\n");
-          return;
+          return 1;
         }
         pas[SP] = M;
         break;
@@ -129,7 +132,6 @@ int main (int argc, char *argv[])
       case 2:
         //SUB operations:
         //Advance the pc to the next instruction
-        PC = PC + 3;
         //If the value beneath the top is a and the top is b...
         //I think these should be switched. TOP is b so
         int b = pas[SP];
@@ -155,7 +157,7 @@ int main (int argc, char *argv[])
             if(SP == endInstruction)
             {
              printf("\nError: stack overflow\n");
-             return;
+             return 1;
             }
             pas[SP] = a + b;
           break;
@@ -167,7 +169,7 @@ int main (int argc, char *argv[])
             if(SP == endInstruction)
             {
               printf("\nError: stack overflow\n");
-              return;
+              return 1;
             }
           pas[SP] = a - b;
           break;
@@ -179,7 +181,7 @@ int main (int argc, char *argv[])
             if(SP == endInstruction)
             {
               printf("\nError: stack overflow\n");
-            return;
+            return 1;
             }
             pas[SP] = a * b;
           break;
@@ -196,7 +198,7 @@ int main (int argc, char *argv[])
             if(SP == endInstruction)
             {
               printf("\nError: stack overflow\n");
-            return;
+            return 1;
             }
             pas[SP] = a / b;
           break;
@@ -208,7 +210,7 @@ int main (int argc, char *argv[])
             if(SP == endInstruction)
             {
               printf("\nError: stack overflow\n");
-            return;
+            return 1;
             }
             if(a == b)
             {
@@ -225,7 +227,7 @@ int main (int argc, char *argv[])
             if(SP == endInstruction)
             {
               printf("\nError: stack overflow\n");
-            return;
+            return 1;
             }
             if(a != b)
             {
@@ -242,7 +244,7 @@ int main (int argc, char *argv[])
             if(SP == endInstruction)
             {
               printf("\nError: stack overflow\n");
-            return;
+            return 1;
             }
             if(a < b)
             {
@@ -259,7 +261,7 @@ int main (int argc, char *argv[])
             if(SP == endInstruction)
             {
               printf("\nError: stack overflow\n");
-            return;
+            return 1;
             }
             if(a <= b)
             {
@@ -277,7 +279,7 @@ int main (int argc, char *argv[])
             if(SP == endInstruction)
             {
               printf("\nError: stack overflow\n");
-            return;
+            return 1;
             }
             if(a > b)
             {
@@ -294,7 +296,7 @@ int main (int argc, char *argv[])
             if(SP == endInstruction)
             {
               printf("\nError: stack overflow\n");
-              return;
+              return 1;
             }
             if(a >= b)
             {
@@ -314,19 +316,18 @@ int main (int argc, char *argv[])
       case 3:
         //LOD
         printf("LOD\t%d\t%d\t", L, M);
-        PC = PC + 3;
         SP = SP - 1;
         if(SP == endInstruction)
         {
           printf("\nError: stack overflow\n");
-          return;
+          return 1;
         }
         //Ensure base(BP,L) - M produces a valid address. Not in system not in text segment. 
         baseAddress = base(BP,L) - M;
         if(baseAddress <= endInstruction)
         {
           printf("\n Error: data address out of rage\n");
-          return;
+          return 1;
         }
         pas[SP] = pas[baseAddress];
         break;
@@ -334,13 +335,12 @@ int main (int argc, char *argv[])
       case 4:
         //STO
         printf("STO\t%d\t%d\t", L, M);
-        PC = PC + 3;
 
         baseAddress = base(BP,L) - M;
         if(baseAddress <= endInstruction)
         {
           printf("\n Error: data address out of rage\n");
-          return;
+          return 1;
         }
         pas[baseAddress] = pas[SP];
         SP = SP + 1;
@@ -353,18 +353,17 @@ int main (int argc, char *argv[])
         pas[SP-2] = BP; // new new postion = current base pointer (dynamic link?)
         pas[SP-3] = PC; // new new new position = PC (return address?)
         BP = SP - 1; // current base pointer = current stack pointer - 1;
-        PC = M; //where exactly does this go? we know advance must come before excecution.
+        PC = M;
         break;
   
       case 6:
         //INC
         printf("INC\t%d\t%d\t", L, M);
-        PC = PC + 3;
         SP = SP - M;// Words are allocated here, we dont know what the words are just how many there are so we allocate m spaces.
-        if(SP == endInstruction)
+        if(SP <= endInstruction)
         {
           printf("\nError: stack overflow\n");
-          return;
+          return 1;
         }
         break;
   
@@ -375,16 +374,12 @@ int main (int argc, char *argv[])
         break; // return address a
   
       case 8:
-        // We need an if else statement here, PC changes if condition met otherwise it increments as usual.
+        // PC changes if condition met otherwise it increments as usual.
         printf("JPC\t%d\t%d\t", L, M);
         if(pas[SP] == 0)
           {
           PC = M;
           }
-        else
-        {
-          PC = PC + 3;
-        }
         SP = SP + 1;
         break;
   
@@ -393,27 +388,25 @@ int main (int argc, char *argv[])
         switch(M)
         {
           case 1:
-            PC = PC + 3;
             printf("Output result is: %d\n", pas[SP]);
             printf("SYS\t%d\t%d\t", L, M);
             SP = SP + 1;
-            //PC is the index for our PAS array; shouldn't it be SP? to get the value at the top of the stack?
-            //Also it says pop so shouldnt we change the SP after getting the value? SP = SP + 1;
             break;
-  
+
           case 2:
-            int x;
-            PC = PC + 3;
             printf("Please Enter an Integer: ");
             scanf("%d", &x);
             printf("%d\n", x);
             printf("SYS\t%d\t%d\t", L, M);
             SP = SP - 1;
+            if(SP <= endInstruction)
+            {
+              printf("\nError: stack overflow\n")
+            }
             pas[SP] = x;
           break;
   
           case 3:
-            //PC = PC + 3; unneeded as this is the last instruction.
             printf("SYS\t%d\t%d\t", L, M);
             printf("%d\t%d\t%d\t", PC, BP, SP);
             for(int i = 999; i >= SP; i--)
@@ -421,9 +414,9 @@ int main (int argc, char *argv[])
               printf("%d    ", pas[i]);
             }
             printf("\n");
-            return 0;
+           return 0;
           break;
-  
+
           default:
             printf("\nError: unknown SYS operation\n");
           break;
