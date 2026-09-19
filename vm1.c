@@ -315,7 +315,6 @@ int main (int argc, char *argv[])
   
       case 3:
         //LOD
-        printf("LOD\t%d\t%d\t", L, M);
         SP = SP - 1;
         if(SP <= endInstruction)
         {
@@ -326,22 +325,22 @@ int main (int argc, char *argv[])
         baseAddress = base(BP,L) - M;
         if(baseAddress <= endInstruction)
         {
-          printf("\nError: data address out of rage\n");
+          printf("\nError: data address out of range\n");
           return 1;
         }
+        printf("LOD\t%d\t%d\t", L, M);
         pas[SP] = pas[baseAddress];
         break;
   
       case 4:
         //STO
-        printf("STO\t%d\t%d\t", L, M);
-
         baseAddress = base(BP,L) - M;
         if(baseAddress <= endInstruction)
         {
-          printf("\nError: data address out of rage\n");
+          printf("\nError: data address out of range\n");
           return 1;
         }
+        printf("STO\t%d\t%d\t", L, M);
         pas[baseAddress] = pas[SP];
         SP = SP + 1;
         break;
@@ -358,13 +357,13 @@ int main (int argc, char *argv[])
   
       case 6:
         //INC
-        printf("INC\t%d\t%d\t", L, M);
         SP = SP - M;// Words are allocated here, we dont know what the words are just how many there are so we allocate m spaces.
         if(SP <= endInstruction)
         {
           printf("\nError: stack overflow\n");
           return 1;
         }
+        printf("INC\t%d\t%d\t", L, M);
         break;
   
       case 7:
@@ -427,7 +426,7 @@ int main (int argc, char *argv[])
       break;
     }
 
-    printf("%d\t%d\t%d", PC, BP, SP);
+    printf("%d\t%d\t%d\t", PC, BP, SP);
 
     int temp = BP;
 
