@@ -190,12 +190,13 @@ int main (int argc, char *argv[])
   
           case(4):
           //push a / b
-            printf("DIV\t%d\t%d\t", L, M);
-            if(a == 0)
+            if(b == 0)
             {
               printf("\nError: division by zero\n");
               return 1;
+              break;
             }
+            printf("DIV\t%d\t%d\t", L, M);
             SP = SP + 1;
             /*if(SP <= endInstruction)
             {
@@ -331,10 +332,11 @@ int main (int argc, char *argv[])
           printf("\nError: data address out of range\n");
           return 1;
         }
-        // printf("LOD\t%d\t%d\t", L, M); //
+        printf("LOD\t%d\t%d\t", L, M); //
         pas[SP] = pas[baseAddress];
         break;
   
+        
       case 4:
         //STO
 
@@ -344,7 +346,7 @@ int main (int argc, char *argv[])
           printf("\nError: data address out of range\n");
           return 1;
         }
-        // printf("STO\t%d\t%d\t", L, M);//
+        printf("STO\t%d\t%d\t", L, M);
         pas[baseAddress] = pas[SP];
         SP = SP + 1;
         break;
