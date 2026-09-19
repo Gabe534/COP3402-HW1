@@ -151,38 +151,40 @@ int main (int argc, char *argv[])
           break;
   
           case(1):
-          //push a + b;
+          //pop a and b from the stack and push a + b.
             printf("ADD\t%d\t%d\t", L, M);
-            SP = SP - 1;
-            if(SP <= endInstruction)
+            // we already have a and b so just remove them from the stack.
+            // instead of removing 2 and adding 1 to bottom just remove 1 and write
+            SP = SP + 1;
+            /*if(SP <= endInstruction)
             {
              printf("\nError: stack overflow\n");
              return 1;
-            }
+            }*/
             pas[SP] = a + b;
           break;
   
           case(2):
           //push a - b
             printf("SUB\t%d\t%d\t", L, M);
-            SP = SP - 1;
-            if(SP <= endInstruction)
+            SP = SP + 1;
+            /*if(SP <= endInstruction)
             {
               printf("\nError: stack overflow\n");
               return 1;
-            }
+            }*/
           pas[SP] = a - b;
           break;
   
           case(3):
           //push a x b
             printf("MUL\t%d\t%d\t", L, M);
-            SP = SP - 1;
-            if(SP <= endInstruction)
+            SP = SP + 1;
+            /*if(SP <= endInstruction)
             {
               printf("\nError: stack overflow\n");
             return 1;
-            }
+            }*/
             pas[SP] = a * b;
           break;
   
@@ -194,24 +196,24 @@ int main (int argc, char *argv[])
               printf("\nError: division by zero\n");
               break;
             }
-            SP = SP - 1;
-            if(SP <= endInstruction)
+            SP = SP + 1;
+            /*if(SP <= endInstruction)
             {
               printf("\nError: stack overflow\n");
             return 1;
-            }
+            }*/
             pas[SP] = a / b;
           break;
   
           case(5):
           //push 1 if a = b, otherwise 0
             printf("EQL\t%d\t%d\t", L, M);
-            SP = SP - 1;
-            if(SP <= endInstruction)
+            SP = SP + 1;
+            /*if(SP <= endInstruction)
             {
               printf("\nError: stack overflow\n");
-            return 1;
-            }
+             return 1;
+            }*/
             if(a == b)
             {
               pas[SP] = 1;
@@ -223,12 +225,12 @@ int main (int argc, char *argv[])
           case(6):
           //push 1 if a != b, otherwise 0
             printf("NEQ\t%d\t%d\t", L, M);
-            SP = SP - 1;
-            if(SP <= endInstruction)
+            SP = SP + 1;
+            /*if(SP <= endInstruction)
             {
               printf("\nError: stack overflow\n");
             return 1;
-            }
+            }*/
             if(a != b)
             {
               pas[SP] = 1;
@@ -240,12 +242,12 @@ int main (int argc, char *argv[])
           case(7):
           //push 1 if a < b, otherwise 0
             printf("LSS\t%d\t%d\t", L, M);
-            SP = SP - 1;
-            if(SP <= endInstruction)
+            SP = SP + 1;
+            /*if(SP <= endInstruction)
             {
               printf("\nError: stack overflow\n");
             return 1;
-            }
+            }*/
             if(a < b)
             {
               pas[SP] = 1;
@@ -257,12 +259,12 @@ int main (int argc, char *argv[])
           case(8):
           //push 1 if a <= b, otherwise 0
             printf("LEQ\t%d\t%d\t", L, M);
-            SP = SP - 1;
-            if(SP <= endInstruction)
+            SP = SP + 1;
+            /*if(SP <= endInstruction)
             {
               printf("\nError: stack overflow\n");
             return 1;
-            }
+            }*/
             if(a <= b)
             {
               pas[SP] = 1;
@@ -275,12 +277,12 @@ int main (int argc, char *argv[])
           case(9):
           //push 1 if a > b, otherwise 0
             printf("GTR\t%d\t%d\t", L, M);
-            SP = SP - 1;
-            if(SP <= endInstruction)
+            SP = SP + 1;
+            /*if(SP <= endInstruction)
             {
               printf("\nError: stack overflow\n");
             return 1;
-            }
+            }*/
             if(a > b)
             {
               pas[SP] = 1;
@@ -292,12 +294,12 @@ int main (int argc, char *argv[])
           case(10):
           //push 1 if a >= b, otherwise 0
             printf("GEQ\t%d\t%d\t", L, M);
-            SP = SP - 1;
-            if(SP <= endInstruction)
+            SP = SP + 1;
+            /*if(SP <= endInstruction)
             {
               printf("\nError: stack overflow\n");
               return 1;
-            }
+            }*/
             if(a >= b)
             {
               pas[SP] = 1;
@@ -309,7 +311,6 @@ int main (int argc, char *argv[])
           default:
             printf("\nError: unknown OPR sub-operation\n");
           break;
-  
         }
         break;
   
@@ -357,13 +358,13 @@ int main (int argc, char *argv[])
   
       case 6:
         //INC
+        printf("INC\t%d\t%d\t", L, M);
         SP = SP - M;// Words are allocated here, we dont know what the words are just how many there are so we allocate m spaces.
         if(SP <= endInstruction)
         {
           printf("\nError: stack overflow\n");
           return 1;
         }
-        printf("INC\t%d\t%d\t", L, M);
         break;
   
       case 7:
@@ -427,19 +428,10 @@ int main (int argc, char *argv[])
     }
 
     printf("%d\t%d\t%d\t", PC, BP, SP);
-
-    int temp = BP;
-
     for(int i = 999; i >= SP; i--)
     {
-      if(i == temp && pas[temp] != 0) 
-      {
-        printf("%5s", "| ");
-        temp = pas[temp+1];
-      }
-
-      printf("%-5d", pas[i]);
+      printf("%d    ", pas[i]);
     }
     printf("\n");
-  } 
+  }
 }
