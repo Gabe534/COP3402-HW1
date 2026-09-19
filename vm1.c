@@ -151,9 +151,11 @@ int main (int argc, char *argv[])
           break;
   
           case(1):
-          //push a + b;
+          //pop a and b from the stack and push a + b.
             printf("ADD\t%d\t%d\t", L, M);
-            SP = SP - 1;
+            // we already have a and b so just remove them from the stack.
+            // instead of removing 2 and adding 1 to bottom just remove 1 and write
+            SP = SP + 1;
             if(SP <= endInstruction)
             {
              printf("\nError: stack overflow\n");
@@ -165,7 +167,7 @@ int main (int argc, char *argv[])
           case(2):
           //push a - b
             printf("SUB\t%d\t%d\t", L, M);
-            SP = SP - 1;
+            SP = SP + 1;
             if(SP <= endInstruction)
             {
               printf("\nError: stack overflow\n");
@@ -177,7 +179,7 @@ int main (int argc, char *argv[])
           case(3):
           //push a x b
             printf("MUL\t%d\t%d\t", L, M);
-            SP = SP - 1;
+            SP = SP + 1;
             if(SP <= endInstruction)
             {
               printf("\nError: stack overflow\n");
@@ -194,7 +196,7 @@ int main (int argc, char *argv[])
               printf("\nError: division by zero\n");
               break;
             }
-            SP = SP - 1;
+            SP = SP + 1;
             if(SP <= endInstruction)
             {
               printf("\nError: stack overflow\n");
@@ -206,7 +208,7 @@ int main (int argc, char *argv[])
           case(5):
           //push 1 if a = b, otherwise 0
             printf("EQL\t%d\t%d\t", L, M);
-            SP = SP - 1;
+            SP = SP + 1;
             if(SP <= endInstruction)
             {
               printf("\nError: stack overflow\n");
@@ -223,7 +225,7 @@ int main (int argc, char *argv[])
           case(6):
           //push 1 if a != b, otherwise 0
             printf("NEQ\t%d\t%d\t", L, M);
-            SP = SP - 1;
+            SP = SP + 1;
             if(SP <= endInstruction)
             {
               printf("\nError: stack overflow\n");
@@ -240,7 +242,7 @@ int main (int argc, char *argv[])
           case(7):
           //push 1 if a < b, otherwise 0
             printf("LSS\t%d\t%d\t", L, M);
-            SP = SP - 1;
+            SP = SP + 1;
             if(SP <= endInstruction)
             {
               printf("\nError: stack overflow\n");
@@ -257,7 +259,7 @@ int main (int argc, char *argv[])
           case(8):
           //push 1 if a <= b, otherwise 0
             printf("LEQ\t%d\t%d\t", L, M);
-            SP = SP - 1;
+            SP = SP + 1;
             if(SP <= endInstruction)
             {
               printf("\nError: stack overflow\n");
@@ -275,7 +277,7 @@ int main (int argc, char *argv[])
           case(9):
           //push 1 if a > b, otherwise 0
             printf("GTR\t%d\t%d\t", L, M);
-            SP = SP - 1;
+            SP = SP + 1;
             if(SP <= endInstruction)
             {
               printf("\nError: stack overflow\n");
@@ -292,7 +294,7 @@ int main (int argc, char *argv[])
           case(10):
           //push 1 if a >= b, otherwise 0
             printf("GEQ\t%d\t%d\t", L, M);
-            SP = SP - 1;
+            SP = SP + 1;
             if(SP <= endInstruction)
             {
               printf("\nError: stack overflow\n");
